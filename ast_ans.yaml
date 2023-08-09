@@ -1,0 +1,80 @@
+---
+#self_signed_certs:
+#    - key: server.key
+#      cert: server.crt
+
+
+- hosts: localhost
+  become: yes
+  tasks:
+
+    - name: Create self-signed certificate
+      command: >
+        openssl req -x509 -nodes -subj '/CN= local_host' -days 365
+        -newkey rsa:4096 -sha256 -keyout srv.key -out srv.crt
+      #with_items: "{{ self_signed_certs }}"
+
+    - name: Install Docker Engine
+      apt:
+        name: docker.io
+        state: present
+          #    - name: Install Docker CLI
+          #apt:
+          #name: docker-compose
+          #state: present
+
+    - name: Create docker group
+      group:
+        name: docker
+        state: present
+      become: yes
+
+    - name: Add user to the docker group
+      user:
+        name: docker
+        groups: docker
+        append: yes
+          #     with_items: "{{ non_root_docker_users }}"
+      become: yes
+
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+    
+    - name: Pull nginx Docker image
+      docker_image:
+        name: nginx
+        source: pull
+          #   - name: Create volume
+          #docker_volume:
+          #name: nginx-data
+          #driver: local
+    - name: Run nginx Docker container
+#      command: >
+#        docker run -d --name web  -p 443:443
+#        -v /home/alexf/ansible/test/server.key:/etc/ssl/private/server.key
+#        -v /home/alexf/ansible/test/server.crt:/etc/ssl/certs/server.crt -v
+#        /home/alexf/ansible/test/nginx_default_page:/etc/nginx/conf.d/default.conf
+#        --restart unless-stopped nginx
+#      become: true
+#      become_user: docker
+
+      docker_container:
+        name: nginx1
+        image: nginx
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "8080:80"
+          - "8081:443"
+        volumes:
+          - "/home/alexf/ansible/test/srv.key:/etc/ssl/private/server.key"
+          - "/home/alexf/ansible/test/srv.crt:/etc/ssl/certs/server.crt"
+          - "/home/alexf/ansible/test/nginx_default_page:/etc/nginx/conf.d/default.conf"
+#        become: true
+#        become_method: su
+#        become_user: docker
+#        become_flags: '-s /bin/sh'
