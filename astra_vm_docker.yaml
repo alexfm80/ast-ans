@@ -7,8 +7,7 @@
       command: >
         openssl req -x509 -nodes -subj '/CN= local_host' -days 365
         -newkey rsa:4096 -sha256 -keyout /etc/ssl/private/srv.key -out /etc/ssl/certs/srv.crt
-      #with_items: "{{ self_signed_certs }}"
-
+   
     - name: Install required system packages
       apt:
         pkg:
@@ -36,7 +35,6 @@
         name: docker
         groups: docker
         append: yes
-          #     with_items: "{{ non_root_docker_users }}"
       become: yes
       
     - name: Install Docker Engine
@@ -62,7 +60,6 @@
         state: started
         restart_policy: unless-stopped
         ports:
-          - "8080:80"
           - "443:443"
         volumes:
           - "/etc/ssl/private/srv.key:/etc/ssl/private/server.key"
