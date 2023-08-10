@@ -14,10 +14,43 @@
         -newkey rsa:4096 -sha256 -keyout /etc/ssl/private/srv.key -out /etc/ssl/certs/srv.crt
       #with_items: "{{ self_signed_certs }}"
 
-    - name: Install Docker Engine
+    - name: Install required system packages
       apt:
-        name: docker.io
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
         state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+#    - name: Install Docker Engine
+#      apt:
+#        name: docker.io
+#        state: present
           #    - name: Install Docker CLI
           #apt:
           #name: docker-compose
