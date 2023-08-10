@@ -10,7 +10,7 @@
 
     - name: Create self-signed certificate
       command: >
-        openssl req -x509 -nodes -subj '/CN= local_host' -days 365
+        openssl req -x509 -nodes -subj '/CN= tantor.devops.test' -days 365
         -newkey rsa:4096 -sha256 -keyout /etc/ssl/private/srv.key -out /etc/ssl/certs/srv.crt
       #with_items: "{{ self_signed_certs }}"
 
