@@ -105,7 +105,7 @@
         volumes:
           - "/etc/ssl/private/srv.key:/etc/ssl/private/server.key"
           - "/etc/ssl/certs/srv.crt:/etc/ssl/certs/server.crt"
-          - "/tmp/ast-ans/nginx_default_page.conf:/etc/nginx/conf.d/default.conf"
+          - "/home/astra/ast-ans/nginx_default_page.conf:/etc/nginx/conf.d/default.conf"
 #        become: true
 #        become_method: su
 #        become_user: docker
