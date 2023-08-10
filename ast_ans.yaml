@@ -98,7 +98,7 @@
         name: nginx1
         image: nginx
         state: started
-        restart_policy: unless-stopped
+        restart_policy: always
         ports:
           - "8080:80"
           - "443:443"
