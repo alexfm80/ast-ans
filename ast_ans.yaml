@@ -46,17 +46,6 @@
     - name: Install Docker Module for Python
       pip:
         name: docker
-
-    - name: Install Docker Engine
-      apt:
-        name: docker.io
-        state: present
-        update_cache: true
-          #    - name: Install Docker CLI
-          #apt:
-          #name: docker-compose
-          #state: present
-
     - name: Create docker group
       group:
         name: docker
@@ -70,7 +59,16 @@
         append: yes
           #     with_items: "{{ non_root_docker_users }}"
       become: yes
-
+      
+    - name: Install Docker Engine
+      apt:
+        name: docker.io
+        state: latest
+        update_cache: true
+          #    - name: Install Docker CLI
+          #apt:
+          #name: docker-compose
+          #state: present
 
     - name: Start Docker service
       service:
