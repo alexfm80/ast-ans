@@ -81,7 +81,7 @@
     - name: Pull nginx Docker image
       docker_image:
         name: nginx
-        source: pull
+#        source: pull
           #   - name: Create volume
           #docker_volume:
           #name: nginx-data
